@@ -63,8 +63,19 @@ Many other applications at Voodoo will use consume this API.
 We are planning to put this project in production. According to you, what are the missing pieces to make this project production ready? 
 Please elaborate an action plan.
 
+## Answer:
+To make the project production-ready, the frontend should be hosted on S3 and served through CloudFront for optimal performance and scalability. For the API, which currently uses SQLite, it’s possible to replace it with a more robust and scalable database like RDS (MySQL/PostgreSQL). The API can be deployed on AWS Lightsail or EC2, depending on the project’s needs, and secured with HTTPS. It’s possible to store environment variables securely using Secrets Manager. Monitoring and logging can be achieved through CloudWatch to keep track of the application’s health and performance. This setup will ensure the project is scalable, secure, and production-ready.
+
 #### Question 2:
 Let's pretend our data team is now delivering new files every day into the S3 bucket, and our service needs to ingest those files
 every day through the populate API. Could you describe a suitable solution to automate this? Feel free to propose architectural changes.
 
+To automate file ingestion, I see two solutions :
 
+1- update the populate endpoint to dynamically accept file links from S3. Then, set up a cron job on the Lightsail server to run the API at a fixed time each day, fetching new files from the S3 bucket.
+
+2- A more efficient approach is to use S3 event notifications to automatically trigger the populate endpoint whenever a new file is uploaded, eliminating the need for a cron job.
+
+However, S3 Event Notifications cannot directly call an external API, they can only send events to AWS services like Lambda, SNS, or SQS. Instead, we can create a Lambda function that listens for new file uploads, retrieves the file’s content, and calls your populate API (POST /api/games/populate).
+
+This solution ensures real-time processing, reduces latency, and scales automatically, making it more robust than a cron job.
