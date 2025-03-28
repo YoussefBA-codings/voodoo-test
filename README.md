@@ -70,6 +70,7 @@ To make the project production-ready, the frontend should be hosted on S3 and se
 Let's pretend our data team is now delivering new files every day into the S3 bucket, and our service needs to ingest those files
 every day through the populate API. Could you describe a suitable solution to automate this? Feel free to propose architectural changes.
 
+## Answer:
 To automate file ingestion, I see two solutions :
 
 1- update the populate endpoint to dynamically accept file links from S3. Then, set up a cron job on the Lightsail server to run the API at a fixed time each day, fetching new files from the S3 bucket.
